@@ -1,2 +1,2 @@
-# University-work-
-Contains all of my projects and work during my time at university 
+# BASS_Politics_and_Data_Analytics 
+Contains all of my quantitative projects and work during my undergraduate degree
