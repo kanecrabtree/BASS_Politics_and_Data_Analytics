@@ -5,7 +5,6 @@ The repository serves as an ongoing record of my academic development, with a pa
 
 ## Repository Structure
 Work is organised into folders by module code, with individual folders used to separate practical exercises, assignments and projects where appropriate.
-
 The repository includes work from modules covering areas such as:
 
 Quantitative methods and statistics — statistical analysis and practical exercises.
