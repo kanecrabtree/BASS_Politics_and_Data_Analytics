@@ -1,0 +1,14 @@
+---
+title: "Reproducibility in Social Research"
+output: html_document
+date: "2026-10-23"
+---
+# **Why Reproducibility Matters in Social Research**
+
+Reproducibility is important in social research because it allows other researchers to check how findings were produced and whether the same results can be obtained using the same data and methods. This helps ensure that research is transparent, reliable and trustworthy. Without reproducibility, it becomes more difficult to identify errors or determine whether conclusions are supported by the evidence.
+
+Another important benefit is that reproducibility allows researchers to build on existing work. By sharing their data, methods and code, researchers make it easier for others to verify findings, conduct further analysis and develop new research questions. This is particularly important in social research, where findings can influence government policies and decisions that affect people's lives.
+
+Reproducibility can also improve the quality of research by encouraging researchers to document their methods carefully and make their analytical decisions clear. However, it can be challenging when data is unavailable, methods are poorly documented or privacy concerns prevent data sharing. Researchers must therefore balance transparency with ethical responsibilities.
+
+Overall, reproducibility is essential for maintaining confidence in social research. It supports accountability, helps identify mistakes and allows findings to be independently checked, making research more credible and useful.
