@@ -1,0 +1,223 @@
+---
+title: 'Lab Exercise: Using Regression to the Investigate the Effects of COVID-19 on Mental Health'
+author: "Todd K Hartman"
+date: "Last updated `r format(Sys.Date())`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, eval = FALSE)
+```
+
+## Background
+The COVID-19 global pandemic is arguably one of the most disruptive events in modern human history, certainly since the turn of the 21st Century. In response, scholars across the world have formed new research teams and collaborations to collect data to better understand COVID-19's impact on society. One such research group is the COVID-19 Psychological Research Consortium (C19PRC), which formed just before the pandemic spread to the UK.
+
+The C19PRC Study is a large, longitudinal online survey of the general adult population (aged 18 years and older) in multiple European countries, with regular and timely repeated assessments of the baseline samples planned as the pandemic unfolded. In addition to self-reported mental health measures, the C19PRC Study design also prioritises the collection of data on a wide range of beliefs, political attitudes, socio-economic contextualising information, and potentially important neurocognitive mechanisms involved in risk perception and decision making with respect to COVID-19 at each wave. The baseline sample (*N* = 2,025) also served as a recruitment spine from which smaller, supplementary (qualitative and experimental) studies could be conducted, particularly with groups vulnerable to the effects of COVID-19 (e.g., the elderly, medically vulnerable people, pregnant women, frontline workers, etc.). Recruitment was conducted by reputable online marketing research companies (Qualtrics in UK, Republic of Ireland, and Italy; Sondea in Spain).
+And quota sampling methods were used to ensure the representativeness of each country’s general adult population sample with respect to age, gender, household income (in the UK and Italy only); and/or geographical or political region (Republic of Ireland, Spain, and Italy only).  
+
+More details about the C19PRC Study are available in the following articles (the Supplemental Appendix provides detailed information about measures collected across 6 waves of survey data collection):
+
+McBride, O. et al. (Forthcoming). Sharing data to better understand one of the world’s most significant shared experiences: Data Resource Profile of the longitudinal COVID-19 Psychological Research Consortium (C19PRC) Study. *International Journal of Population Data Science*. (doi:)[] 
+
+## Getting Started
+Let's load the C19PRC data, as well as packages that we'll need for this analysis (e.g., haven, tidyverse, etc.). The data are publicly available at the (Open Science Framework)[https://osf.io/v2zur/], as well as the (UK Data Service)[https://ukdataservice.ac.uk/find-data/browse/]. On the OSF website, use the 'Files' navigation tab to list the various data files. In this lab exercise, we'll use data from Waves 1 and 2, which were collected in March and April 2020, respectively. Download and unzip the file in your working directory: (https://osf.io/9emvp/)[https://osf.io/9emvp/]. Review the codebook to familiarise yourself with the measures collected in Waves 1 and 2, as well as how they're coded.
+
+![](osf.png)
+
+Note that the data are available in an SPSS format, which base R cannot read. The 'haven' package will allow us to load many different data formats (e.g., SPSS, Stata, SAS, etc.). Use the `read_sav()` function to import the data and store it as a new object called `df`.
+
+```{r, echo = TRUE}
+## Load packages using 'pacman' 
+pacman::p_load(haven, janitor, magrittr, psych, 
+               sjPlot, tidyverse)
+
+## Load C19PRC data
+df <- read_sav("C19PRC-UK Waves 1 and 2 OSF/C19PRC_UKW1W2_archive_final.sav")
+glimpse(df)  # Check the data loaded properly
+
+```
+
+## Question 1
+One benefit of using data from software like SPSS is that it often contains variable labels, value labels, and other important details about the measures stored *within* R. We can use a package called `sjPlot` created by Daniel Luedecke to create an .html codebook. In addition, the `sjPlot` package contains a suite of neat functions to visualise, interpret, and use data more efficiently: (https://strengejacke.github.io/sjPlot/)[https://strengejacke.github.io/sjPlot/].
+
+Using the R code below, create the SPSS codebook, which you'll see in the 'Viewer' tab of R Studio (bottom right window pane). If you click the icon with an arrow on it, you can open and save the codebook in a web browser, which makes it easier to peruse. At the end of the Wave 1 variables (indicated by 'W1_'), you'll find additional items that were added based upon each respondent's geolocation. What contextual variables are included in the data? How might you use them in your regression models?
+
+![Viewer tab in R Studio](file_tab.png)
+
+```{r, echo = TRUE}
+## Create the codebook using 'sjPlot' package
+view_df(df)
+
+```
+
+## Question 2
+Let's begin by examining the extent to which respondents in the sample felt *anxious* about COVID-19. Just after a full national lockdown was announced in the UK, people were asked the following survey question: "How anxious are you about the coronavirus COVID-19 pandemic?" This particular question was measured using a *thermometer* response format, which is generally anchored between 0 (Cold) and 100 (Hot). To indicate their level of anxiety, respondents used a slider scale ranging from 0 = 'Not at all anxious' to 100 'Extremely anxious'; we assume that 50 is the theoretical midpoint of the scale. The variable 'W1_COVID19_anxiety' contains responses to this question.
+
+Examine the descriptive statistics for COVID-19 anxiety and create a density plot using the `geom_density()` argument from `ggplot`. Do most respondents appear to be worried about COVID-19? Is anxiety normally distributed throughout the sample? Is this outcome suitable for Ordinary Least Squares (OLS) regression? 
+
+[Hint: think about its range and distribution -- i.e., is it (pseudo-)continuous and (mostly) normally distributed?] 
+
+```{r, echo = TRUE}
+## Summary statistics 
+summary(df$W1_COVID19_anxiety)
+
+## From 'psych' package 
+describe(df$W1_COVID19_anxiety)
+
+## Density plot using ggplot2
+ggplot(df) + 
+  geom_density(aes(W1_COVID19_anxiety), fill = 'lightblue')
+
+```
+
+## Question 3
+What predictors collected in the C19PRC data might be associated with changes in levels of COVID-19 anxiety? In most analysis of survey data, a sensible place to start would be with socio-demographic indicators like gender, age, ethnicity, etc. For instance, one might reasonably argue that older people may be more worried about COVID-19 because these individuals are at greater risk from severe infection (and death) than younger people. Likewise, certain ethnic groups seem more susceptible to complications from COVID-19 infection, which might reasonably increase their self-reported anxiety.
+
+Begin by checking the correlation between age in years (`W1_Age_year`) and COVID-19 anxiety (`W1_COVID19_anxiety`). Is there a relationship betwen age and anxiety as predicted?
+
+Next, regress COVID-19 anxiety (`W1_COVID19_anxiety`) on age (`W1_Age_categories`), gender (`W1_Gender`), ethnicity (`W1_Ethnicity`), education (`W1_Education_binary`), and urbanicity (`W1_Urbanicity`). Remember to first check that there are no problematic values for any continuous or ordered categorical variables -- i.e., values for 'Don't Know' or 'Refused to Answer' collected in the survey but outside of the range of acceptable values (e.g., a value of 101 could be used to indicate 'Don't Knows' for the anxiety question). In addition, nominal predictors (i.e., those that have no clear ordering) must be dummy coded, with $m$ categories coded into a maximum of $m - 1$ dummies in the model (at least *one* category must be excluded to serve as the reference group; you can, however, combine categories any way you like for comparison based on theory or number of observations in a given category).
+
+Recode any problematic values and create dummy variables for nominal predictors. Store the results of the OLS regression using the `lm()` function, with the outcome regressed on (`~`) predictors in an additive approach (e.g., iv1 + iv2 + iv3), into an object called `model.1`. Substantively interpret the results (i.e., a 1-unit change in predictor X is associated with a BLANK change in my outcome Y). 
+
+**Suggested Dummy Coding**
+Age: 18 - 24 years old (excluded as reference group)
+
+Gender: Male = 1, all other categories = 0
+
+Ethnicity: White = 1, nonwhite = 0
+
+Education: Post-secondary = 1, otherwise = 0 (already dummy coded)
+
+Urbanicity: City = 1, otherwise = 0 (already dummy coded)
+
+*Note*: There is a special class of variables called *factors*, which tell R that a variable is categorical (either *unordered* in the case of nominal variables, or *ordered* for ordered categories like support-opposition of a political issue). When running regression, a factor will be automatically dummy coded. The downside to this approach is that it can be difficult (but not impossible) to control which category serves as the excluded reference group, and the resulting output can be ugly.
+
+```{r, echo = TRUE}
+## Check the correlation between age and anxiety
+df %>%
+  select(W1_Age_year, W1_COVID19_anxiety) %>% 
+  cor(use = 'complete.obs')  # Delete missing cases
+
+## Check frequencies using 'janitor' package
+tabyl(df$W1_Age_categories)  # Age
+tabyl(df$W1_Gender)  # Gender
+tabyl(df$W1_Ethnicity)  # Ethnicity
+tabyl(df$W1_Education_binary)  # Education
+tabyl(df$W1_Urbanicity)  # Urbanicity
+
+## Create AGE dummy variables using tidyverse conventions
+df %<>%  # From 'magrittr' package, same as <- 
+  mutate(age_18to24 = 
+           case_when(
+             W1_Age_categories == 1 ~ 1, TRUE ~ 0),
+         age_25to34 = 
+           case_when(
+             W1_Age_categories == 2 ~ 1, TRUE ~ 0),
+         age_35to44 = 
+           case_when(
+             W1_Age_categories == 3 ~ 1, TRUE ~ 0),
+         age_45to54 = 
+           case_when(
+             W1_Age_categories == 4 ~ 1, TRUE ~ 0),
+         age_55to64 = 
+           case_when(
+             W1_Age_categories == 5 ~ 1, TRUE ~ 0),
+         age_65plus = 
+           case_when(
+             W1_Age_categories == 6 ~ 1, TRUE ~ 0)
+         ) 
+  
+## Create GENDER dummy variable using base R
+## male = 1, female and others = 0
+df$male <- ifelse(df$W1_Gender == 1, 1, 0)
+
+## Create ETHNICITY dummy
+## nonwhite = 1, white = 0
+df %<>%  # From 'magrittr' package, same as <- 
+  mutate(nonwhite = 
+           case_when(
+             W1_Ethnicity <= 2 ~ 0, TRUE ~ 1) 
+  )
+    
+  
+## OLS regression
+model.1 <- lm(W1_COVID19_anxiety ~ 
+                age_18to24 + 
+                age_25to34 + age_35to44 + age_45to54 +
+                age_55to64 + #age_65plus  +
+                male + nonwhite + 
+                W1_Education_binary + 
+                W1_Urbanicity, 
+              data = df)
+
+## Print basic results
+summary(model.1)
+
+## Print results using 'sjPlot'
+## They will appear as an .html output in the 'Viewer' pane
+tab_model(model.1)
+
+```
+
+## Question 4
+Our first model was OK, but it only explains a small portion of the variance in COVID-19 anxiety (check the model's R-squared values). Can you think of any other predictors that might capture variation in levels of COVID-19 anxiety? For instance, one could argue that resilience -- the notion that one can 'bounce back' from difficult circumstances -- might be associated with levels of COVID-19 anxiety. 
+
+Create a resilience scale (from 6 items used to measure resilience) using the `psych` package. Rescale this variable to range from 0 to 1 to make interpretation easier (i.e., a 1-unit change means moving from minimum to maximum levels of resilience in the sample). Fit a new model with socio-demographic factors *and* resilience. Does this improve model fit? Interpret your findings. 
+
+```{r, echo = TRUE}
+## Create the resilience scale
+## List the items that comprise the scale
+r.keys <- list(resilience = cs(W1_Resilience1, -W1_Resilience2, 
+                               W1_Resilience3, -W1_Resilience4, 
+                               W1_Resilience5, -W1_Resilience6) )
+
+## Now create the scale using the items identified above
+r.test <- scoreItems(r.keys, df, min = 1, max = 5)
+
+## Check the newly created scales and retrieve the scale alpha
+head(r.test$scores)  # Check the data
+summary(r.test$alpha)  # Scale alpha
+
+## Add the new  variable to the data 
+df$resilience <- r.test$scores
+```
+
+Cronbach's alpha provides a measure of internal consistency of the scale items, and it is generally interpreted as indicator of the scale's reliability. It does not, however, tell whether the items tap a unidimensional construct (for that, we would need to conduct exploratory or confirmatory factor analysis). The resilience scale alpha of 0.8835 confirms that the scale is a reliable measure of resilience (and is consistent with prior research). 
+
+Our `rescale01()` function can be used on any variable: 
+
+```{r, echo = TRUE}
+## [rescale01] Function to rescale a variable from 0 to 1
+rescale01 <- function(x, ...) {
+  (x - min(x, ...)) / ((max(x, ...)) - min(x, ...))
+}
+
+## Rescale from 0 to 1 and store this as a new variable
+df$resilience01 <- rescale01(df$resilience, na.rm = TRUE)
+
+describe(df$resilience01)  # Check the summary statistics
+
+## OLS regression
+model.2 <- lm(W1_COVID19_anxiety ~ age_18to24 + 
+                age_25to34 + age_35to44 + age_45to54 +
+                age_55to64 + 
+                male + nonwhite + 
+                W1_Education_binary + 
+                W1_Urbanicity + 
+                resilience01, 
+              data = df)
+
+## Print basic results
+summary(model.2)
+
+## Print results using 'sjPlot'
+## They will appear as an .html output in the 'Viewer' pane
+tab_model(model.2)
+
+```
+
+
+## Question 5
+Are there any other continuous outcomes that you might be interested in modelling? Conduct these additional analyses and interpret the results. How well do these additional models fit the data?

@@ -1,0 +1,157 @@
+---
+title: "Combinational Algebra"
+output:
+  pdf_document: default
+  html_document: default
+date: "2024-10-24"
+---
+COMBINATIONS
+combinations <-(factorial(n) / (factorial(k) * factorial(n - k)))
+
+Factorials are used in calculating combinations, where the order of selection does not matter.
+
+
+PERMUTATIONS (without repetition)
+permutations <- (factorial(n) / factorial(n - k))
+
+Factorials are used to calculate the number of ways to arrange k items from a set of n (when the order matters)
+
+
+Part 1- combinations
+
+# The License Plate Problem
+You could have xxx alpha, nn numeric, x alpha, n numberic for a total of 7 characters.
+
+How many plates can be produced [which are unique]? [these choices reflect independent groups since the use of the symbols is unlimited]
+
+Obviously the last two characters allow times 23 and times 9 unique new plate options. Each * represents the use of the product rule.
+
+# Define the number of possible characters
+26  # Number of letters in the alphabet (for xxx)
+10    # Number of digits (for nn)
+23  # Number of letters for the last character
+9     # Number of digits for the last number
+
+C(26,3)timesC(10,2)timesC(23,1)timesC(9,1)
+
+C(26,3) computes the number of ways to choose 3 characters from 26 letters.
+C(10,2) computes the number of ways to choose 2 digits from 10 numbers.
+C(23,1) computes the number of ways to choose 1 character from 23 letters.
+C(9,1) computes the number of ways to choose 1 digit from 9 numbers.
+
+
+
+```{r}
+#Step 1 for 3 spaces in which alpha characters are put: 
+uniquecombos=26*25*24/(3*2)
+uniquecombos
+
+uniquecombos2=10*9/(2*1)
+uniquecombos2
+
+#It follows the `26 choose 3’ rule, formula:
+# 26!/(23!3!) or 26*25*24/(3*2)
+#correctly calculates the unique combinations of 3 alphabetic characters using C (26,3).
+```
+
+```{r}
+#*Full License combos list()
+#Note to self:  C(26,3)*C(10,2)*C(23,1)*C(9,1)
+Totaluniques= (2600*(45)*23*9)
+Totaluniques
+#multiplies the results of all combinations to find the total number of unique plates.
+```
+
+```{r}
+#*reformat the results to be in a sentence, with appropriate punctuation
+result1 <- scales::label_comma(accuracy = .2, big.mark = ",", decimal.mark = ".")
+
+result1(Totaluniques)
+#* You would not use accuracy 0.2 in integer counts, but it can be useful in diagrams of money spent.
+#* 
+```
+
+
+If we sold 89,000 plates, how many do we have left?
+
+```{r}
+Result<- Totaluniques-89000
+print(paste("We now have ", Result , "plates left."))
+Result <- result1(Result)
+print(paste("We now have ",  Result , " plates left."))
+```
+
+Part 2- permutations
+
+Second anagram task: Suppose now we can choose any distinct letter to go in each of nine spaces. How
+many permutations could exist, for this word game?
+
+P(26,9) = 26!/(17!) = 26*25*24*23*22*21*20*19*18.
+Eg. Bacfnpout.
+
+Permutations without repetition:
+```{r}
+#*First assume there is no repetition of any letter in Angelford.  How many permutations are possible?
+result2 <- scales::label_comma(accuracy = 1.0, big.mark = ",", decimal.mark = ".")
+angelfordnum <- factorial(26)/factorial(26-9)
+angelfordnum
+result2(angelfordnum)
+```
+factorial(26) computes the factorial of 26.
+factorial(26 - 9) computes the factorial of the difference (26 - 9 = 17).
+The division gives you the number of ways to arrange 9 distinct letters chosen from 26.
+
+
+Permutations with repetition:
+Permutations can be specified to either allow or not allow for re-drawing a letter.
+```{r}
+#NOTE:    Factorials are the product of k*(k-1)*(k-2)*… *(1).  The factorial of 1 is 1. 
+
+ifrepeats <- 26^9
+result2(ifrepeats)
+
+```
+26^9 computes the number of ways to arrange 9 letters when each can be any of the 26 letters and repetition is allowed.
+
+Permutations without repetition will give a much smaller number than permutations with repetition.
+Permutations with repetition will be significantly larger, as each of the 9 positions can independently be filled with any of the 26 letters.
+
+
+Part 3- combination
+A category is a type of item, also called a line of stock. Looking at our external warehouse’s 200 categories (or holdings), how many unique ways can we group any 40 of them into an aisle for customers or staff to collect them?
+```{r}
+#Large Storage Warehouse Task 
+Warehouseresult<-factorial(200)/(factorial(40)*factorial(60))
+print(paste(result2(Warehouseresult)))
+```
+n=200 (the total number of categories),
+
+k=40 (the number of categories being selected).
+
+Trying to calculate how many unique ways you can group 40 categories from a total of 200 categories in a warehouse. This is a combinations problem because the order of selection does not matter; you're just choosing a group of categories, not arranging them.
+
+
+Part 4- combination
+A smaller store, Fernley’s Furniture, has only 50 categories in stock. How many unique 40-category displays are there for Fernley’s to choose from?
+```{r}
+#Fernley's Shop Task
+myresult<-factorial(50)/(factorial(10)*factorial(40))
+print(paste(result2(myresult)))
+
+```
+factorial(50) calculates  50!, the factorial of 50.
+factorial(40) calculates 40!, the factorial of the 40 categories you're choosing.
+factorial(10) calculates 10!, the factorial of the remaining categories (50 - 40 = 10).
+Fernley's Furniture, which has only 50 categories in stock, and you want to select 40 categories to create a display, you're dealing with another combinations problem. You are choosing 40 categories from a total of 50.
+
+Part 5- permutation
+The aisle of a shop or a storage area like Ikea can hold up to 40 large categories (20 per side) in order A1, A2, … A20, B1, B2, B3,… B20. How many ordered options are there for holding an itemset of 40 items?
+```{r}
+#Shop Aisle Task
+Number3 <- result2(factorial(200)/factorial(160))
+paste(Number3)
+```
+factorial(200) computes 200!, the total number of items in the warehouse.
+factorial(160) computes 160!, the factorial of the remaining items (200 - 40 = 160).
+
+In this case, you're dealing with a permutations problem where you're trying to calculate the number of ways to order 40 items from a total of 200 items.

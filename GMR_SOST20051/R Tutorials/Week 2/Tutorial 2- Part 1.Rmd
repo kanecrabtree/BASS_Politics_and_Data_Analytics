@@ -1,0 +1,142 @@
+---
+title: "Tutorial 2"
+output:
+  pdf_document: default
+  html_document: default
+date: "2024-10-01"
+---
+
+## Setting the Working Directory in R
+
+You can set the working directory in R to specify where files are read from or saved. Below is the code for setting the working directory on different operating systems.
+
+
+# Set the working directory
+# Replace "path/to/your/directory" with your actual directory path
+
+# Windows:
+setwd("C:/Users/YourName/Documents/ProjectFolder")
+
+setwd("C:/kanes stuff/uni work/year 2/semester 1/Market research/R tutorials/Week 2")
+getwd()
+
+# macOS or Linux:
+setwd("/Users/YourName/Documents/ProjectFolder")
+
+
+## Download the Data
+
+
+```{r}
+store.df <- read.csv("http://goo.gl/QPDdMl")
+```
+
+## Task 1, lets break down the following boxplots
+
+This creates a single boxplot for the variable p2sales from the store.df data frame.
+
+This boxplot represents the weekly sales (p2sales) for all stores combined, without distinguishing between different stores.
+For a more comprehensive analysis, you need to break down the data by meaningful categories, such as by store.
+
+xlab = "Weekly sales": Label for the x-axis, representing the weekly sales values.
+ylab = "P2": Label for the y-axis, which can be used to indicate the product or item being analyzed (in this case, "P2").
+main = "Weekly sales of P2, All stores": The title of the boxplot.
+horizontal = TRUE: The boxplot is drawn horizontally, with the x-axis showing the sales values and the y-axis indicating "P2".
+
+```{r}
+boxplot(store.df$p2sales, xlab="Weekly sales", ylab="P2",
+        main="Weekly sales of P2, All stores", horizontal=TRUE)
+```
+
+This code creates multiple boxplots, one for each store in the dataset (storeNum).The ~ operator is used here to create boxplots for p2sales by store. Each boxplot represents the distribution of weekly sales (p2sales) for a different store.In R, the ~ can be read as "by", meaning the boxplots will be grouped based on the unique values of storeNum.
+
+Each unique storeNum will generate a separate boxplot. 
+
+ylab = "Store": Labels the y-axis, indicating that each boxplot corresponds to a different store.
+xlab = "Weekly unit sales": Labels the x-axis, which shows the sales data.
+las = 1: Rotates the y-axis labels to be horizontal, making the store labels easier to read.
+main = "Weekly Sales of P2 by Store": The title of the plot.
+horizontal = TRUE: The boxplots are horizontal, with sales values on the x-axis.
+ 
+```{r}
+boxplot(store.df$p2sales ~ store.df$storeNum, horizontal=TRUE,
+        ylab="Store", xlab="Weekly unit sales", las=1,
+        main="Weekly Sales of P2 by Store")
+```
+
+## Factor
+
+
+Check if store.df$storeNum is a factor
+
+```{r}
+is.factor(store.df$storeNum)
+```
+```{r}
+class(store.df$storeNum)
+```
+
+
+This line of code converts the variable storeNum in the data frame df1 into a factor.
+
+```{r}
+store.df$storeNum <- factor(store.df$storeNum)
+```
+
+```{r}
+class(store.df$storeNum)
+```
+
+## Task 2:  Discuss the use of [ ] brackets which contain conditional row and column expressions in R.
+
+This line of R code creates a histogram for the mpce variable in the df5 data frame, but only for the values of mpce that are less than 30,000.
+
+hist(df5$mpce[df5$mpce<30000])
+
+df5$mpce: This selects the mpce column from the data frame df5
+df5$mpce < 30000: This condition checks which values in the mpce column are less than 30,000. It returns a vector of TRUE or FALSE values.
+df5$mpce[df5$mpce < 30000]: This subsetting operation uses the condition to extract only the values of mpce that satisfy the condition (i.e., mpce values less than 30,000).
+hist(): The hist() function creates a histogram of the filtered values. 
+
+The expression df5$mpce[df5$mpce < 30000] only focuses on filtering rows based on a condition for one specific column, which is mpce. 
+
+
+## Task 3: Construct a histogram
+
+This command is creating a histogram of the store.spend column in the cust.df data frame.
+
+The breaks argument controls how the data is divided into bins (intervals) in the histogram.
+max(cust.df$store.spend) calculates the maximum value of the store.spend column.
+ceiling(max(cust.df$store.spend)/10) rounds up this maximum value to the nearest 10.
+0:ceiling(...) creates a sequence of numbers from 0 to this rounded maximum.
+Multiplying by 10 ensures that the bin width is set to 10
+
+```{r}
+cust.df <- read.csv("http://goo.gl/PmPkaG")
+```
+
+```{r}
+hist(cust.df$store.spend, 
+     breaks=(0:ceiling(max(cust.df$store.spend)/10))*10,
+     main="Customers as of June 2014", 
+     xlab="Prior 12 months in-store sales ($)", 
+     ylab="Count of customers")
+```
+
+## Task 4:Create a kernel density diagram
+
+d <- density(store.df$p2prom):
+density() generates a kernel density estimate.
+store.df$p2prom is referring to a column named p2prom in the dataframe store.df.
+The result is stored in d, containing the estimated density data.
+plot(d):
+This plots the density estimate stored in d. 
+
+```{r}
+d <- density(store.df$p2prom)
+plot(d)
+```
+
+
+
+

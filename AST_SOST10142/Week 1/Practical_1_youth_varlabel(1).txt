@@ -1,0 +1,310 @@
+UKHLS youth data (wave 7)
+===========================
+Variables and labels
+===========================
+   Variables Labels
+ 1 pidp      Cross-wave Person Identifier (Public Release)       
+ 2 country   Country of residence                                
+ 3 urban_dv  Urban or rural area, derived                        
+ 4 dvage     Age                                                 
+ 5 ypsex     Sex of respondent                                   
+ 6 yphsw     How feel about school work                          
+ 7 yphap     How feel about appearance                           
+ 8 yphlf     How feel about life as a whole                      
+ 9 ypevrsmo  Do you ever smoke cigarettes at all?                
+10 yplvhm    At what age would you like to leave home?           
+11 ypvte6    How interested are you in politics?                 
+12 ypsocweb  Belong to social website                            
+13 ypnetcht  Hours spent interacting with friends through social websites
+14 yptruant  In the last 12 months, have you ever played truant? 
+15 ypargm    How often do you quarrel with your mother?          
+16 ypargf    How often do you quarrel with your father?          
+17 ypuni    Would you like to go on to do further full-time education at a college or Uni
+18 ypmobu    Do you have your own personal mobile phone?
+
+===========================
+Codebook and tabulations
+===========================
+
+-> tabulation of dvage
+        Age |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         10 |        569       15.65       15.65
+         11 |        628       17.28       32.93
+         12 |        630       17.33       50.26
+         13 |        547       15.05       65.31
+         14 |        671       18.46       83.77
+         15 |        590       16.23      100.00
+------------+-----------------------------------
+      Total |      3,635      100.00
+
+-> tabulation of ypsex  
+
+        Sex of |
+ respondent    |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+          Male |1     1,806       49.68       49.68
+        Female |2     1,829       50.32      100.00
+---------------+-----------------------------------
+         Total |      3,635      100.00
+
+-> tabulation of country
+
+      Country of |
+       residence |      Freq.     Percent        Cum.
+-----------------+-----------------------------------
+         missing |-9         2        0.06        0.06
+         England | 1     3,003       82.61       82.67
+           Wales | 2       140        3.85       86.52
+        Scotland | 3       285        7.84       94.36
+Northern Ireland | 4       205        5.64      100.00
+-----------------+-----------------------------------
+             Total |     3,635      100.00
+
+-> tabulation of g_gor_dv  
+
+Government Office Region |      Freq.     Percent        Cum.
+-------------------------+-----------------------------------
+                 missing |-9        2        0.06        0.06
+              North East | 1       121        3.33        3.38
+              North West | 2       401       11.03       14.42
+Yorkshire and the Humber | 3       363        9.99       24.40
+           East Midlands | 4       249        6.85       31.25
+           West Midlands | 5       344        9.46       40.72
+         East of England | 6       282        7.76       48.47
+                  London | 7       575       15.82       64.29
+              South East | 8       416       11.44       75.74
+              South West | 9       252        6.93       82.67
+                   Wales |10       140        3.85       86.52
+                Scotland |11       285        7.84       94.36
+        Northern Ireland |12       205        5.64      100.00
+-------------------------+-----------------------------------
+                   Total |      3,635      100.00
+
+-> tabulation of urban_dv  
+
+    Urban or |
+ rural area, |
+     derived |      Freq.     Percent        Cum.
+-------------+-----------------------------------
+     missing |-9        2        0.06        0.06
+  urban area | 1     2,848       78.35       78.40
+  rural area | 2       785       21.60      100.00
+-------------+-----------------------------------
+       Total |      3,635      100.00
+
+
+-> tabulation of yphsw  
+
+How feel about |
+ school work   |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+       Missing |-9       31        0.85        0.85
+             1 |        847       23.30       24.15
+             2 |      1,215       33.43       57.58
+             3 |        904       24.87       82.45
+             4 |        387       10.65       93.09
+             5 |        157        4.32       97.41
+             6 |         55        1.51       98.93
+             7 |         36        0.99       99.92
+Invalid answer |9         3        0.08      100.00
+---------------+-----------------------------------
+         Total |      3,635      100.00
+
+-> tabulation of yphap  
+
+How feel about |
+ appearance    |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+       Missing |-9       41        1.13        1.13
+             1 |        976       26.85       27.98
+             2 |        986       27.13       55.10
+             3 |        774       21.29       76.40
+             4 |        478       13.15       89.55
+             5 |        195        5.36       94.91
+             6 |        106        2.92       97.83
+             7 |         73        2.01       99.83
+Invalid answer | 9        6        0.17      100.00
+---------------+-----------------------------------
+         Total |      3,635      100.00
+
+-> tabulation of yphlf  
+
+How feel about |
+     life as a |
+       whole   |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+       Missing |-9       28        0.77        0.77
+             1 |      1,297       35.68       36.45
+             2 |      1,192       32.79       69.24
+             3 |        638       17.55       86.80
+             4 |        280        7.70       94.50
+             5 |        117        3.22       97.72
+             6 |         44        1.21       98.93
+             7 |         29        0.80       99.72
+Invalid answer |9        10        0.28      100.00
+---------------+-----------------------------------
+         Total |      3,635      100.00
+
+-> tabulation of yplvhm  
+ At what age |
+   would you |
+     like to |
+ leave home? |      Freq.     Percent        Cum.
+-------------+-----------------------------------
+     Missing |-9      381       10.48       10.48
+          10 |         16        0.44       10.92
+          11 |          5        0.14       11.06
+          12 |         12        0.33       11.39
+          13 |          5        0.14       11.53
+          14 |         14        0.39       11.91
+          15 |         13        0.36       12.27
+          16 |         56        1.54       13.81
+          17 |         86        2.37       16.18
+          18 |        753       20.72       36.89
+          19 |        405       11.14       48.03
+          20 |        617       16.97       65.01
+          21 |        293        8.06       73.07
+          22 |        228        6.27       79.34
+          23 |        138        3.80       83.14
+          24 |        113        3.11       86.24
+          25 |        248        6.82       93.07
+          26 |         35        0.96       94.03
+          27 |         38        1.05       95.08
+          28 |         34        0.94       96.01
+          29 |         27        0.74       96.75
+          30 |         69        1.90       98.65
+          31 |          3        0.08       98.73
+          32 |          4        0.11       98.84
+          33 |          3        0.08       98.93
+          35 |         12        0.33       99.26
+          37 |          2        0.06       99.31
+          38 |          1        0.03       99.34
+          40 |          5        0.14       99.48
+          45 |          1        0.03       99.50
+          46 |          1        0.03       99.53
+          47 |          1        0.03       99.56
+          50 |          5        0.14       99.70
+          52 |          2        0.06       99.75
+          64 |          1        0.03       99.78
+          69 |          1        0.03       99.81
+          70 |          3        0.08       99.89
+          71 |          1        0.03       99.92
+          83 |          1        0.03       99.94
+          94 |          1        0.03       99.97
+          99 |          1        0.03      100.00
+-------------+-----------------------------------
+       Total |      3,635      100.00
+
+-> tabulation of ypvte6  
+
+   How interested |
+       are you in |
+       politics?  |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+          Missing |-9      112        3.08        3.08
+  Very interested | 1       214        5.89        8.97
+Fairly interested | 2     1,072       29.49       38.46
+   Not interested | 3     2,234       61.46       99.92
+   Invalid answer | 9        3        0.08      100.00
+------------------+-----------------------------------
+            Total |      3,635      100.00
+
+-> tabulation of ypnetcht 
+
+      Hours spent |
+ interacting with |
+  friends through |
+  social websites |      Freq.     Percent        Cum.
+------------------+-----------------------------------
+          Missing |-9    1,087       29.90       29.90
+             None | 1      163        4.48       34.39
+Less than an hour | 2    1,018       28.01       62.39
+        1-3 hours | 3      931       25.61       88.01
+        4-6 hours | 4      321        8.83       96.84
+  7 or more hours | 5      112        3.08       99.92
+                9 | 9        3        0.08      100.00
+------------------+-----------------------------------
+            Total |      3,635      100.00
+
+-> tabulation of yptruant  
+
+In the last 12 |
+  months, have |
+      you ever |
+played truant? |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+       Missing |-9       43        1.18        1.18
+           Yes | 1      252        6.93        8.12
+            No | 2    3,340       91.88      100.00
+---------------+-----------------------------------
+         Total |      3,635      100.00
+
+
+-> tabulation of ypargm  
+
+     How often do you |
+    quarrel with your |
+            mother?   |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+              Missing |-9         37        1.02        1.02
+            Most days | 1        373       10.26       11.28
+More than once a week | 2        523       14.39       25.67
+Less than once a week | 3        817       22.48       48.14
+          Hardly ever | 4      1,859       51.14       99.28
+  Don't have a mother | 5         21        0.58       99.86
+       Invalid answer | 9         5        0.14      100.00
+----------------------+-----------------------------------
+                Total |      3,635      100.00
+
+-> tabulation of ypargf  
+
+     How often do you |
+    quarrel with your |
+            father?   |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+              Missing |-9       57        1.57        1.57
+            Most days | 1       250        6.88        8.45
+More than once a week | 2       350        9.63       18.07
+Less than once a week | 3       631       17.36       35.43
+          Hardly ever | 4     2,126       58.49       93.92
+  Don't have a father | 5       216        5.94       99.86
+       Invalid answer | 9         5        0.14      100.00
+----------------------+-----------------------------------
+                Total |      3,635      100.00
+
+
+-> tabulation of ypuni
+Lecturer renamed as ypuni by editing the original name, yp2uni.
+
+Would you like |
+to go on to do |
+       further |
+     full-time |
+education at a |
+college or Uni |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+       Missing |-9      1,080       29.71       29.71
+           Yes | 1      2,413       66.38       96.09
+            No | 2        141        3.88       99.97
+Invalid answer | 9          1        0.03      100.00
+---------------+-----------------------------------
+         Total |        3,635      100.00
+
+-> tabulation of ypmobu
+
+   Do you have |
+      your own |
+      personal |
+mobile phone?  |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+       Missing |-9        18        0.50        0.50
+           Yes | 1     2,930       80.61       81.10
+            No | 2       686       18.87       99.97
+Invalid answer | 9         1        0.03      100.00
+---------------+-----------------------------------
+         Total |      3,635      100.00
+
+
+### End ### 
+

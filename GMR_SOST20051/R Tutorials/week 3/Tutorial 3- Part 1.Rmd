@@ -1,0 +1,309 @@
+---
+title: "Tutorial 3"
+output: html_document
+date: "2024-10-10"
+---
+Set directory:
+This sets the working directory, which is the folder where R will look for files to read and where it will save outputs.
+
+```{r}
+setwd("")
+```
+
+
+This reads a CSV file (sample1NFHSaugmentedAnon.csv) into a dataframe (india.df).
+```{r}
+india.df <- read.csv("sample1NFHSaugmentedAnon.csv")
+```
+
+
+This calculates the total number of missing values in each column of the dataframe (india.df) and prints the result.
+```{r}
+missing_values <- colSums(is.na(india.df))
+print(missing_values)
+```
+
+colnames(india.df) lists the names of the columns in the dataframe.
+str(india.df) shows the structure of the dataframe, including data types and the first few values in each column.
+summary(india.df) provides summary statistics for each column in the df.
+
+```{r}
+colnames(india.df)
+
+str(india.df)
+
+summary(india.df)
+```
+
+This block calculates the mean, maximum, median, and standard deviation of the bmi_numeric column and then prints these statistics along with the summary of the column.
+```{r}
+# Calculate summary statistics for bmi_numeric
+mean_bmi <- mean(india.df$bmi_numeric)
+max_bmi <- max(india.df$bmi_numeric)
+median_bmi <- median(india.df$bmi_numeric)
+sd_bmi <- sd(india.df$bmi_numeric)
+
+# Print the results
+mean_bmi
+max_bmi
+median_bmi
+sd_bmi
+
+summary(india.df$bmi_numeric)
+```
+
+The first boxplot visualizes the distribution of bmi_numeric across the entire population.
+The second boxplot shows the distribution of bmi_numeric grouped by the social group category, which has been converted to a factor variable (socialgroup).
+```{r}
+#BOXPLOTS
+boxplot(india.df$bmi_numeric , xlab="BMI Numeric" , ylab="Population",
+        main="BMI Numeric , All " , horizontal=TRUE)
+
+india.df$socialgroup <- as.factor(india.df$socialgroup) #converted to factor
+
+# Create a boxplot for bmi_numeric across socialgroup
+boxplot(bmi_numeric ~ socialgroup, data = india.df,
+        horizontal = TRUE,  
+        main = "Boxplot of BMI Numeric by Social Group",
+        xlab = "Social Group", 
+        ylab = "BMI Numeric",
+        col = "lightblue",
+        border = "black")
+```
+
+This creates a histogram of the bmi_numeric variable with:
+
+Custom color settings (green for the bars and black for the borders).
+Set at intervals of 5 for better visualization of the BMI distribution.
+```{r}
+#HISTOGRAMS
+
+# Set custom colors and point characters
+my.col <- c("black", "green3")
+my.pch <- c(1, 19)  # Open and solid circles
+
+# Create a histogram for the bmi_numeric variable with custom breaks
+hist(india.df$bmi_numeric,
+     breaks=(0:ceiling(max(india.df$bmi_numeric, na.rm = TRUE)/5))*5,  # Custom breaks in steps of 5
+     main="Distribution of BMI Numeric",
+     xlab="BMI Numeric",
+     ylab="Count of Individuals",
+     col=my.col[2],  # Fill color green3
+     border=my.col[1])  # Border color black
+```
+
+Generates a density plot of bmi_numeric, which is a smoothed version of a histogram, showing the distribution of BMI. The plot uses a blue line with increased thickness (lwd = 2).
+```{r}
+#DENSITY PLOTS
+# Plot a density plot for the bmi_numeric variable
+plot(density(india.df$bmi_numeric), 
+     main = "Density Plot of BMI Numeric",
+     xlab = "BMI Numeric",
+     ylab = "Density",
+     col = "blue",   # Color of the density line
+     lwd = 2)        # Line width
+```
+
+
+Creates a beanplot to compare the distribution of bmi_numeric across different social groups.
+```{r}
+# Create a beanplot for bmi_numeric split by socialgroup
+library(beanplot)
+
+beanplot(bmi_numeric ~ socialgroup, data = india.df,
+         horizontal = TRUE,       # Horizontal orientation
+         yaxt = "n",              # Disable y-axis ticks
+         what = c(0, 1, 1, 0),    # Hide the bean curve, show mean and data points
+         log="",
+         side = "second",         # Plot beans on the right side
+         col = list("blue", "lightgreen","yellow","red"), # Custom color for the beans
+         main = "BMI Numeric by Social Group", 
+         xlab = "BMI Numeric",
+         ylab = "Social Group")
+# Customize the y-axis labels
+axis(side = 2, at = 1:length(levels(india.df$socialgroup)), 
+     labels = levels(india.df$socialgroup))
+```
+
+This scatterplot visualizes the relationship between age and bmi_numeric, setting custom axis limits. Horizontal and vertical dotted lines are added to indicate the mean values of bmi_numeric and age, respectively.
+```{r}
+#scatterplot
+
+# Create a scatter plot for age and bmi_numeric
+plot(india.df$age, india.df$bmi_numeric,
+     col = "blue",  # Color for the points
+     xlim = c(15, 55),  # Set limits for the x-axis (age)
+     ylim = c(min(india.df$bmi_numeric, na.rm = TRUE), max(india.df$bmi_numeric, na.rm = TRUE)),  # Set y-axis limits based on bmi_numeric
+     main = "Age vs. BMI Numeric",
+     xlab = "Age (years)", 
+     ylab = "BMI Numeric")
+
+# Add a horizontal line for the mean of bmi_numeric
+abline(h = mean(india.df$bmi_numeric, na.rm = TRUE), col = "dark blue", lty = "dotted")
+
+# Add a vertical line for the mean of age
+abline(v = mean(india.df$age, na.rm = TRUE), col = "dark blue", lty = "dotted")
+```
+
+
+
+This line reads another dataset (rintro-chapter4.csv) from an online source related to customer data.
+```{r}
+cust.df <- read.csv(paste("http://r-marketing.r-forge.r-project.org/",
+                          "data/rintro-chapter4.csv", sep=""))
+```
+
+This provides a summary of the customer dataset (cust.df)
+```{r}
+summary(cust.df)
+```
+
+This section creates a  simple scatterplot that visualizes the relationship between customer age and credit.score
+```{r}
+plot(x=cust.df$age, y=cust.df$credit.score)
+```
+
+This plot refines the scatterplot by limiting the xlim and ylim ranges to specific values (age 15-55, credit score 500-900). It also adds horizontal and vertical dotted lines representing the mean credit score and mean age, respectively, and adds color 
+```{r}
+plot(cust.df$age, cust.df$credit.score, 
+     col="blue",
+     xlim=c(15, 55), ylim=c(500, 900), 
+     main="Active Customers as of June 2014",
+     xlab="Customer Age (years)", ylab="Customer Credit Score ")
+abline(h=mean(cust.df$credit.score), col="dark blue", lty="dotted")
+abline(v=mean(cust.df$age), col="dark blue", lty="dotted")
+```
+
+
+The scatterplot visualizes the relationship between store spend (store.spend) and online spend (online.spend) over the past 12 months for customers.
+```{r}
+# Scatterplot with skewed variables and color-coded factors
+plot(cust.df$store.spend, cust.df$online.spend, 
+     main="Customers as of June 2014", 
+     xlab="Prior 12 months in-store sales ($)", 
+     ylab="Prior 12 months online sales ($)", 
+     cex=0.7)
+```
+
+
+The histogram breaks down customer store spend into intervals of $10, helping visualize the distribution of store sales.
+```{r}
+hist(cust.df$store.spend, 
+     breaks=(0:ceiling(max(cust.df$store.spend)/10))*10,
+     main="Customers as of June 2014", 
+     xlab="Prior 12 months in-store sales ($)", 
+     ylab="Count of customers")
+
+```
+
+This code first converts the email variable into a factor, indicating whether customers have an email on file.
+
+Two scatterplots visualize the relationship between store and online spend, color-coded by whether the customer has an email on file. The second plot uses logarithmic scales on both axes.
+```{r}
+
+cust.df$email <- as.factor(cust.df$email)
+                           
+# Define custom colors and point characters
+my.col <- c("black", "green3") 
+my.pch <- c(1, 19) # R's symbols for solid and open circles (see ?points)
+
+plot(cust.df$store.spend, cust.df$online.spend,
+     cex=0.7,
+     col=my.col[cust.df$email], pch=my.pch[cust.df$email], 
+     main="Customers as of June 2014", 
+     xlab="Prior 12 months in-store sales ($)", 
+     ylab="Prior 12 months online sales ($)" )
+
+# and then add a legend
+legend(x="topright", legend=paste("email on file:", levels(cust.df$email)), 
+       col=my.col, pch=my.pch)
+
+plot(cust.df$store.spend + 1, cust.df$online.spend + 1,
+     log="xy", cex=0.7,
+     col=my.col[cust.df$email], pch=my.pch[cust.df$email],
+     main="Customers as of June 2014", 
+     xlab="Prior 12 months in-store sales ($)", 
+     ylab="Prior 12 months online sales ($)" )
+legend(x="topright", legend=paste("email on file:", levels(cust.df$email)), 
+       col=my.col, pch=my.pch)
+
+
+
+```
+
+This sets up a 2x2 layout of plots showing the relationship between distance.to.store and spending in-store and online. Two plots use a logarithmic scale on both axes.
+
+```{r}
+par(mfrow=c(2, 2))
+plot(cust.df$distance.to.store, cust.df$store.spend, main="store")
+plot(cust.df$distance.to.store, cust.df$online.spend, main="online")
+plot(cust.df$distance.to.store, cust.df$store.spend+1, log="xy", 
+     main="store, log")
+plot(cust.df$distance.to.store, cust.df$online.spend+1, log="xy", 
+     main="online, log")
+```
+
+
+The pairs function creates a scatterplot matrix, which visualizes pairwise relationships between multiple variables
+```{r}
+# Scatterplot matrix
+pairs(formula = ~ age + credit.score + email +
+                  distance.to.store + online.visits + online.trans + 
+                  online.spend + store.trans + store.spend,
+      data=cust.df)
+
+```
+
+
+An enhanced version of the scatterplot matrix, using the scatterplotMatrix function from the car package, which provides more visual information.
+```{r}
+library(car)   # install if needed: install.packages("car")
+```
+
+```{r}
+scatterplotMatrix(formula = ~ age + credit.score + email +
+                    distance.to.store + online.visits + online.trans + 
+                    online.spend + store.trans + store.spend, 
+                  data=cust.df)
+
+```
+COVARIANCE
+
+
+Both codes calculate the covariance between age and credit.score. The second part standardizes the covariance, giving the correlation coefficient between the two variables.
+```{r}
+cov(cust.df$age, cust.df$credit.score)
+
+cov(cust.df$age, cust.df$credit.score)/
+  (sd(cust.df$age)*sd(cust.df$credit.score))
+```
+
+CORRELATION
+
+The first function calculates the correlation between age and credit.score. The second line performs a correlation test.
+```{r}
+cor(cust.df$age, cust.df$credit.score)
+
+
+cor.test(cust.df$age, cust.df$credit.score)
+```
+This calculates a correlation matrix for selected columns of the dataset.
+```{r}
+# Correlation matrix
+cor(cust.df[, c(2, 3, 5:12)])
+```
+
+
+The corrplot.mixed function creates a visually enhanced correlation plot where the upper part shows ellipses representing the strength and direction of correlations. The colorpanel is used to create a color gradient where red indicates negative correlations and blue indicates positive ones.
+```{r}
+library(corrplot)    # for correlation plot
+library(gplots)      # for color interpolation
+```
+
+```{r}
+
+corrplot.mixed(corr=cor(cust.df[ , c(2, 3, 5:12)], use="complete.obs"), 
+               upper="ellipse", tl.pos="lt", 
+               upper.col = colorpanel(50, "red", "gray60", "blue4"))
+```
+

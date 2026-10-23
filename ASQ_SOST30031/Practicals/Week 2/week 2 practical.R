@@ -1,0 +1,484 @@
+rm(list = ls())
+graphics.off() 
+setwd("C:/Users/kanec/OneDrive - The University of Manchester/Uni Work/Year 3/Semester 1/Answering Social Research Questions/Practicals/Week 2")
+getwd()
+
+#Practical 1 recap
+12+2/2
+(12+2)/2
+#PMDAS
+
+Age <- 18 
+Age 
+
+Age <- c(18, 20, 22, 19, 19)
+Age[3]
+Age[5]
+
+mean(Age)
+hist(Age)
+
+StudNo <- 1:10
+StudNo
+
+sample1 <-  matrix(StudNo, nrow = 2)
+sample1
+
+sample2 <-  matrix(StudNo, nrow = 2, byrow = TRUE)
+sample2
+
+sample2 [2,4]
+sample2 [2,]
+sample2 [,4]
+
+#Practical 2 
+#data types
+x <-  1:10
+mode(x)
+class(x)
+
+x <-  c("UK", "Spain", "Serbia", "France", "Germany", "Italy")
+mode(x)
+class(x)
+factor(x)
+x
+
+quality <-  factor(c(3,3,4,2,2,4,0,1))
+levels(quality)
+quality
+
+x <- c("UK", "Spain", "Serbia", "France", "Germany", "Italy")
+is.numeric(x)
+is.factor(x)
+
+share_price <- c(880, 862, 850, 840, 838, 799, 783, 777, 767, 746, 692, 689, 683, 661, 658)
+profit <-  c(161.3, 170.5, 140.7, 115.7, 107.9, 135.2, 142.7, 114.9, 110.4, 98.9, 90.2, 80.6, 85.4, 91.7, 137.8)
+sector <-  factor(c(3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1))
+
+share_price
+profit
+sector
+
+share.data <- data.frame(share_price, profit, sector)
+
+share.data
+share.data$sector
+
+#import data
+df_text <-  read.table(file_name.txt, header = FALSE)
+
+df_csv <-  read.csv("https://datamillnorth.org/download/leeds-libraries/cfc9f345-4916-4b74-aa9e-cecc78db9075/library%2520locations.csv", stringsAsFactors = 
+                      FALSE, fileEncoding = "latin1")
+head(df_csv, 10)
+
+df_csv2 <- read.csv("library locations.csv", stringsAsFactors = 
+                      TRUE, fileEncoding = "latin1")
+
+install.packages("rlang")
+install.packages("readxl")
+library(rlang)
+library(readxl)
+
+df_xl <- read_excel("Dec 2018 - YouGov GLA poll results.xls", sheet = 1)
+
+install.packages("jsonlite")
+library(jsonlite)
+
+my_url <-"https://api.ukhsa-dashboard.data.gov.uk/themes/infectious_disease/sub_themes/respiratory/topics/COVID-19/geography_types/Nation/geographies/England/metrics/COVID-19_cases_casesByDay"
+covid_uk <- fromJSON(my_url)
+
+str(covid_uk)
+names(covid_uk$data)
+
+#data wrangling 
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("gapminder")
+library(dplyr)
+library(ggplot2)
+library(gapminder)
+suppressPackageStartupMessages(library(dplyr))
+
+head(gapminder::gapminder)
+gapminder::gapminder[1:3,]
+dim(gapminder)
+head(gapminder, n=10)
+str(gapminder)
+glimpse(gapminder)
+
+gm_pop_gdp <-  select(gapminder,ends_with("p"))
+head(gm_pop_gdp, n = 1)
+
+gm_cc <-  select(gapminder, starts_with("co"))
+head(gm_cc, n = 1)
+
+gm_cc <-  gapminder[c("country", "continent")]
+
+gapminder2 <-  mutate(gapminder, LifeExp_month = lifeExp * 12)
+head(gapminder2, n = 2)
+
+gapmEU <-  filter(gapminder2, continent == "Europe")
+head(gapmEU, 2)
+
+gapmEU21c <-  filter(gapminder2, continent == "Europe" & year >= 2000)
+head(gapmEU21c, 2)
+
+filter(gapminder2, lifeExp > 80)
+
+gapmEU21c_h21 <-  arrange(gapmEU21c, lifeExp)
+head(gapmEU21c_h21, 2)
+
+gapmEU21c_l2h <- arrange(gapmEU21c, desc(lifeExp))
+head(gapmEU21c_l2h, 2)
+
+arrange(gapminder, pop)
+arrange(gapminder, desc(lifeExp))
+
+summarise(gapminder, max_lifeExp = max(lifeExp), max_gdpPercap = max(gdpPercap))
+summarise(gapminder,mean_lifeExp = mean(lifeExp), mean_gdpPercap = mean(gdpPercap))
+
+gapminder |> 
+  group_by(continent) |>
+  summarise(n_distinct(country))
+
+gapminder_pipe <- gapminder |>
+  filter(continent == "Europe" & year == 2007) |> 
+  mutate(pop_e6 = pop / 1000000)
+
+plot(gapminder_pipe$pop_e6, gapminder_pipe$lifeExp, cex = 0.5,
+     col = "red")
+
+install.packages("tidyr")
+library(tidyr)
+
+no2 <-  read.csv("https://tanjakec.github.io/mydata/2017-no2.csv",
+                 stringsAsFactors = FALSE,
+                 fileEncoding = "latin1")
+glimpse(no2)
+no2
+
+new_no2 <- no2 |> 
+  gather("place", "no2", -Datum, factor_key = TRUE)
+glimpse(new_no2)
+
+new_no2 |> 
+  group_by(place) |> 
+  summarise(n())
+
+install.packages("stringr")
+library(stringr)
+new_no2$place <-  new_no2$place |> 
+  str_sub(end = -5)
+glimpse(new_no2)
+
+new_no2 %>%
+  group_by(place) %>%
+  summarise(n())
+
+install.packages("forcats")
+library(forcats)
+new_no2 <- no2 %>%
+  gather("place", "no2", -Datum, factor_key = TRUE) |> 
+  mutate(place = fct_recode(place, 
+                            "NS_Spens" = "Novi.Sad.SPENS.NO2",
+                            "BG_Most" = "Beograd.Mostar.NO2",
+                            "BG_Vracar" = "Beograd.Vraèar.NO2", 
+                            "BG_ZelenoBrdo" = "Beograd.Zeleno.brdo.NO2", 
+                            "KG" = "Kragujevac..NO2", 
+                            "NI" = "Ni..IZJZ.Ni...NO2",
+                            "UZ" = "U.ice..NO2"))
+glimpse(new_no2)
+new_no2 |> group_by(place) |> 
+           summarise(n())
+
+
+# ==========================================
+# WEATHERAUS EXPLORATION EXERCISE
+# ==========================================
+ install.packages("rattle")
+ install.packages("dplyr")
+ install.packages("ggplot2")
+
+# Load packages
+library(rattle)
+library(dplyr)
+library(ggplot2)
+
+# ==========================================
+# 1 & 2. Load and explore weatherAUS
+# ==========================================
+
+data(weatherAUS)
+
+# View structure of dataset
+glimpse(weatherAUS)
+
+# ==========================================
+# 3. Select variables
+# ==========================================
+
+weather_selected <- weatherAUS %>%
+  select(MinTemp, MaxTemp, Rainfall, Sunshine)
+
+# Display selected variables
+head(weather_selected)
+
+# ==========================================
+# 4. Summary statistics
+# ==========================================
+
+summary(weather_selected)
+
+# ==========================================
+# 5. Filter rainfall >= 1 and save as object
+# ==========================================
+
+rain_days <- weather_selected %>%
+  filter(Rainfall >= 1)
+
+# Check results
+head(rain_days)
+
+# Number of rainy days
+nrow(rain_days)
+
+# ==========================================
+# 6. Additional dplyr analyses
+# ==========================================
+
+# Question:
+# Which locations have the highest average rainfall?
+
+avg_rainfall <- weatherAUS %>%
+  group_by(Location) %>%
+  summarise(
+    Mean_Rainfall = mean(Rainfall, na.rm = TRUE)
+  ) %>%
+  arrange(desc(Mean_Rainfall))
+
+avg_rainfall
+
+# Question:
+# What is the average maximum temperature by location?
+
+avg_maxtemp <- weatherAUS %>%
+  group_by(Location) %>%
+  summarise(
+    Mean_MaxTemp = mean(MaxTemp, na.rm = TRUE)
+  ) %>%
+  arrange(desc(Mean_MaxTemp))
+
+avg_maxtemp
+
+# Question:
+# How many observations are recorded for each location?
+
+weatherAUS %>%
+  count(Location)
+
+# ==========================================
+# 7. Visualisation
+# ==========================================
+
+# Scatterplot of Sunshine vs MaxTemp
+
+temp_plot <- ggplot(weatherAUS,
+       aes(x = Sunshine, y = MaxTemp)) +
+  geom_point(alpha = 0.3, colour = "steelblue") +
+  labs(
+    title = "Relationship Between Sunshine and Maximum Temperature",
+    x = "Sunshine (hours)",
+    y = "Maximum Temperature (°C)"
+  ) +
+  theme_minimal()
+temp_plot
+# ==========================================
+# SHORT REPORT
+# ==========================================
+
+cat("
+Suggested Visualisation:
+A scatterplot of Sunshine and MaxTemp.
+
+Reason:
+This plot helps investigate whether days with more sunshine
+tend to have higher maximum temperatures. A positive trend
+would suggest that increased sunshine is associated with
+warmer conditions. Any unusual observations could indicate
+interesting weather events or outliers that deserve further
+investigation.
+")
+
+#Data visualisation 
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(gapminder))
+suppressPackageStartupMessages(library(ggplot2))
+
+gapminder_pipe <-  gapminder |> 
+  filter(continent == "Europe" & year == 2007) |> 
+  mutate(pop_e6 = pop / 1000000)
+
+ggplot(gapminder_pipe, aes(x = pop_e6, y = lifeExp)) + 
+  geom_point(col = "red")
+ggplot(data = gapminder, mapping = aes(x = lifeExp), bindwidth = 10) +
+  geom_histogram()
+ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_density()
+ggplot(gapminder, aes(x = continent, color = continent)) + 
+  geom_bar()
+ggplot(gapminder, aes(x = continent, fill = continent)) +
+  geom_bar()
+
+m1 <-  lm(gapminder_pipe$lifeExp ~ gapminder_pipe$pop_e6)
+summary(m1)
+
+sample_n(gapminder, 30)
+
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(alpha = 0.2, shape = 21, fill = "blue",  colour = "black", size = 5) + 
+  geom_smooth(method = "lm", se = F, col = "maroon3") +
+  geom_smooth(method = "loess", se = F, col = "limegreen") 
+
+my.model <- lm(gapminder_pipe$lifeExp ~ gapminder_pipe$gdpPercap)
+summary(my.model)
+
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(alpha = 0.2, shape = 20, col = "steelblue", size = 5) +
+  geom_smooth(method = "lm", se = F, col = "maroon3") + 
+  geom_smooth(method = "loess", se = F, col = "limegreen") + 
+  labs(title = "GDP per Capita vs. Population Size", 
+       x = "Population", y = "Life Exp") + 
+  theme(legend.position = "none", 
+        panel.border = element_rect(fill = NA, 
+                                    colour = "black", 
+                                    size = .75), 
+        plot.title = element_text(hjust = 0.5)) +
+  geom_text( x = 80000, y = 125, label = "regression line", col = "maroon3") +
+  geom_text(x = 90000, y = 75, label = "smooth line", col = "limegreen") 
+ 
+annotate("text", x = 80000, y = 125, label = "regression line", 
+         colour = "maroon3")
+
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(aes(col = continent), alpha = 0.5, shape = 20, size = 3) + 
+  geom_smooth(method = "lm", se = F, col = "maroon3") + 
+  geom_smooth(method = "loess", se = F, col = "dodgerblue3") + 
+  labs (title= "GDP per Capita vs. Population Size", 
+        x = "population", y = "Life Exp.") + 
+  theme(legend.position = "right", 
+        panel.border = element_rect(fill = NA, 
+                                    colour = "black",
+                                    size = .75),
+        plot.title=element_text(hjust=0.5)) + 
+  geom_text(x = 80000, y = 125, label = "regression line", col = "maroon3") + 
+  geom_text(x = 90000, y = 75, label = "smooth line", col = "dodgerblue3")
+
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(aes(col = continent), alpha = 0.5, shape = 20, size = 3) + 
+  geom_smooth(method = "lm", se = F, col = "maroon3") + 
+  geom_smooth(method = "loess", se = F, col = "dodgerblue3") + 
+  labs (title= "GDP per Capita vs. Population Size", 
+        x = "population", y = "Life Exp.") + 
+  theme(legend.position = "right", 
+        panel.border = element_rect(fill = NA, 
+                                    colour = "black",
+                                    size = .75),
+        plot.title=element_text(hjust=0.5)) + 
+  geom_text(x = 48000, y = 90, label = "regression line", col = "maroon3") + 
+  geom_text(x = 70000, y = 75, label = "smooth line", col = "dodgerblue3") +
+  coord_cartesian(xlim = c(0, 90000), ylim = c(25, 100))
+
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(aes(col = continent), alpha = 0.5, shape = 20, size = 3) + 
+  geom_smooth(method = "lm", se = F, col = "maroon3") + 
+  geom_smooth(method = "loess", se = F, col = "dodgerblue3") + 
+  labs (title= "GDP per Capita vs. Population Size", 
+        x = "population", y = "Life Exp.") + 
+  theme(legend.position = "right", 
+        panel.border = element_rect(fill = NA, 
+                                    colour = "black",
+                                    size = .75),
+        plot.title=element_text(hjust=0.5)) + 
+  geom_text(x = 80000, y = 125, label = "regression line", col = "maroon3") + 
+  geom_text(x = 90000, y = 75, label = "smooth line", col = "dodgerblue3") +
+  scale_x_continuous(breaks = seq(0, 120000, 20000), labels = c("0", "20K", "40K", "60K", "80K", "100K", "120K")) +
+  scale_colour_brewer(palette = "Set1") + 
+  theme_bw()
+
+install.packages("ggthemes")
+library(ggthemes)
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(aes(col = continent), alpha = 0.5, shape = 20, size = 3) + 
+  geom_smooth(method = "lm", se = F, col = "darkred") + 
+  geom_smooth(method = "loess", se = F, col = "darkgreen") + 
+  labs (title= "GDP per Capita vs. Population Size", 
+        x = "population", y = "Life Exp.") + 
+  theme(legend.position = "right", 
+        panel.border = element_rect(fill = NA, 
+                                    colour = "black",
+                                    size = .75),
+        plot.title=element_text(hjust=0.5)) + 
+  geom_text(x = 80000, y = 125, label = "regression line", col = "darkred") + 
+  geom_text(x = 90000, y = 75, label = "smooth line", col = "darkgreen") +
+  scale_x_continuous(breaks = seq(0, 120000, 20000), labels = c("0", "20K", "40K", "60K", "80K", "100K", "120K")) +
+  scale_colour_wsj() +
+  theme_wsj()
+
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(aes(col = continent), alpha = 0.5, shape = 20, size = 3) + 
+  geom_smooth(method = "lm", se = F, col = "darkred") + 
+  geom_smooth(method = "loess", se = F, col = "black") + 
+  labs (title= "GDP per Capita vs. Population Size", 
+        x = "population", y = "Life Exp.") + 
+  theme(legend.position = "right", 
+        panel.border = element_rect(fill = NA, 
+                                    colour = "black",
+                                    size = .75),
+        plot.title=element_text(hjust=0.5)) + 
+  scale_x_continuous(breaks = seq(0, 120000, 20000), labels = c("0", "20K", "40K", "60K", "80K", "100K", "120K")) +
+  scale_colour_wsj() +
+  theme_wsj() +
+  facet_grid(rows = vars(continent))
+
+gapminder %>%
+  group_by(continent) %>%
+  summarise(lifeExp = median(lifeExp))
+
+ggplot(gapminder, aes(x = continent, y = lifeExp)) + 
+  geom_boxplot(outlier.colour = "hotpink") +
+  geom_jitter(position = position_jitter(width = 0.1, height = 0), alpha = .2) +
+  labs(title = "Life Exp vs. Continent", x = "Continent", y = "life Exp.") + 
+  theme(legend.position = "none", 
+        panel.border = element_rect(fill = NA,
+                                     colour = "black",
+                                     size = .75), 
+        plot.title = element_text(hjust = 0.5))
+
+library(tidyr)
+library(forcats)
+no2 <- read.csv("https://tanjakec.github.io/mydata/2017-no2.csv",
+                stringsAsFactors = FALSE, 
+                fileEncoding = "latin1")
+new_no2 <- no2 %>%
+  gather("place", "no2", -Datum, factor_key = TRUE) %>% # stack all columns apart from `Datum`
+  mutate(place = fct_recode(place, 
+                            "NS_Spens" = "Novi.Sad.SPENS.NO2",
+                            "BG_Most" = "Beograd.Mostar.NO2",
+                            "BG_Vracar" = "Beograd.Vraèar.NO2", 
+                            "BG_ZelenoBrdo" = "Beograd.Zeleno.brdo.NO2", 
+                            "KG" = "Kragujevac..NO2", 
+                            "NI" = "Ni..IZJZ.Ni...NO2",
+                            "UZ" = "U.ice..NO2"))
+glimpse(new_no2)
+
+new_no2 %>% 
+  group_by(place) %>% 
+  filter(!is.na(no2)) %>% 
+  summarise(mean_no2 = mean(no2)) %>% 
+  ggplot(aes(x = place, y = mean_no2, fill = place)) + 
+  geom_bar(stat = "identity") +
+  xlab("Place") + 
+  scale_fill_brewer(palette = "Dark2") + 
+  theme(legend.position="bottom", 
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()) 

@@ -1,0 +1,68 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
+```{r}
+#set up working directory and packages 
+setwd("C:/kanes stuff/uni work/year 2/semester 2/Survey Design/R code")
+getwd()
+pacman::p_load(haven, tidyverse, knitr, weights)
+p18229_bsa23_archive_final <- read_dta("C:/kanes stuff/uni work/year 2/semester 2/Survey Design/data/p18229-bsa23-archive-final.dta")
+
+#variables to keep in data set 
+keep_vars <- c("EURefVote", "HhldEdu", "BSA23_final_wt")
+var <- p18229_bsa23_archive_final[, keep_vars]
+
+rm(p18229_bsa23_archive_final)
+#removing missingness
+table(var$EURefVote)
+table(var$HhldEdu)
+
+var$EURefVote[var$EURefVote == 8] <-NA
+var$EURefVote[var$EURefVote == 9] <-NA
+var$EURefVote[var$EURefVote == -1] <-NA
+
+var$HhldEdu[var$HhldEdu == 8] <-NA
+var$HhldEdu[var$HhldEdu == 9] <-NA
+var$HhldEdu[var$HhldEdu == -1] <-NA
+
+var <- var %>% drop_na()
+
+#renaming results 
+var <- var %>%
+  mutate(
+    EURefVote = case_when(
+      EURefVote == 1 ~ "Remain",
+      EURefVote == 2 ~ "Leave"))
+
+var <- var %>%
+  mutate(
+    HhldEdu = case_when(
+      HhldEdu == 1 ~ "Degree Level",
+      HhldEdu == 2 ~ "Below Degree Level"))
+
+#frequency tabe 
+table1 <- var %>% 
+  select(HhldEdu, EURefVote) %>% 
+  table() %>% 
+  addmargins() %>% 
+as.data.frame.matrix()
+table1
+
+table <- var %>% 
+  select(HhldEdu, EURefVote) %>% 
+  table()
+
+prop_table <- prop.table(table, margin = 1)%>% 
+  `*`(100) %>% 
+  as.data.frame.matrix()
+prop_table
+
+#chi-square test 
+chisq <- chisq.test(var$EURefVote, var$HhldEdu)
+chisq
+
+#chi-square test weighted 
+wtd_chisq <- wtd.chi.sq(var$EURefVote, var$HhldEdu, weight = var$BSA23_final_wt)
+wtd_chisq
